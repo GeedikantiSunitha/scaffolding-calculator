@@ -1035,7 +1035,7 @@
               <div class="conversion-arrow">⇄</div>
               
               <div class="conversion-unit">
-                <input type="number" class="unit-input" id="to-value" placeholder="0" readonly>
+                <input type="number" class="unit-input" id="to-value" placeholder="0">
                 <select class="unit-select" id="to-unit"></select>
               </div>
             </div>
@@ -1568,10 +1568,11 @@
             toUnit.appendChild(option2);
           });
           
-          // Set up conversion listeners
-          document.getElementById('from-value').addEventListener('input', () => this.convert(mode));
-          fromUnit.addEventListener('change', () => this.convert(mode));
-          toUnit.addEventListener('change', () => this.convert(mode));
+          // Set up conversion listeners for bidirectional conversion
+          document.getElementById('from-value').addEventListener('input', () => this.convertFromTo(mode));
+          document.getElementById('to-value').addEventListener('input', () => this.convertToFrom(mode));
+          fromUnit.addEventListener('change', () => this.convertFromTo(mode));
+          toUnit.addEventListener('change', () => this.convertFromTo(mode));
         }
 
         getConverterUnits(mode) {
@@ -1615,13 +1616,81 @@
               { value: 'pt', label: 'Pint (pt)' },
               { value: 'qt', label: 'Quart (qt)' },
               { value: 'gal', label: 'Gallon (gal)' }
+            ],
+            'energy': [
+              { value: 'j', label: 'Joule (J)' },
+              { value: 'kj', label: 'Kilojoule (kJ)' },
+              { value: 'cal', label: 'Calorie (cal)' },
+              { value: 'kcal', label: 'Kilocalorie (kcal)' },
+              { value: 'wh', label: 'Watt-hour (Wh)' },
+              { value: 'kwh', label: 'Kilowatt-hour (kWh)' },
+              { value: 'btu', label: 'British Thermal Unit (BTU)' },
+              { value: 'therm', label: 'Therm' }
+            ],
+            'area': [
+              { value: 'mm2', label: 'Square Millimeter (mm²)' },
+              { value: 'cm2', label: 'Square Centimeter (cm²)' },
+              { value: 'm2', label: 'Square Meter (m²)' },
+              { value: 'km2', label: 'Square Kilometer (km²)' },
+              { value: 'in2', label: 'Square Inch (in²)' },
+              { value: 'ft2', label: 'Square Foot (ft²)' },
+              { value: 'yd2', label: 'Square Yard (yd²)' },
+              { value: 'acre', label: 'Acre' }
+            ],
+            'speed': [
+              { value: 'mps', label: 'Meter per Second (m/s)' },
+              { value: 'kmh', label: 'Kilometer per Hour (km/h)' },
+              { value: 'mph', label: 'Mile per Hour (mph)' },
+              { value: 'fps', label: 'Foot per Second (ft/s)' },
+              { value: 'knot', label: 'Knot' }
+            ],
+            'time': [
+              { value: 'ms', label: 'Millisecond (ms)' },
+              { value: 's', label: 'Second (s)' },
+              { value: 'min', label: 'Minute (min)' },
+              { value: 'h', label: 'Hour (h)' },
+              { value: 'day', label: 'Day' },
+              { value: 'week', label: 'Week' },
+              { value: 'month', label: 'Month' },
+              { value: 'year', label: 'Year' }
+            ],
+            'power': [
+              { value: 'w', label: 'Watt (W)' },
+              { value: 'kw', label: 'Kilowatt (kW)' },
+              { value: 'mw', label: 'Megawatt (MW)' },
+              { value: 'hp', label: 'Horsepower (hp)' },
+              { value: 'btu_h', label: 'BTU per Hour' }
+            ],
+            'data': [
+              { value: 'bit', label: 'Bit (bit)' },
+              { value: 'byte', label: 'Byte (B)' },
+              { value: 'kb', label: 'Kilobyte (KB)' },
+              { value: 'mb', label: 'Megabyte (MB)' },
+              { value: 'gb', label: 'Gigabyte (GB)' },
+              { value: 'tb', label: 'Terabyte (TB)' },
+              { value: 'pb', label: 'Petabyte (PB)' }
+            ],
+            'pressure': [
+              { value: 'pa', label: 'Pascal (Pa)' },
+              { value: 'kpa', label: 'Kilopascal (kPa)' },
+              { value: 'mpa', label: 'Megapascal (MPa)' },
+              { value: 'bar', label: 'Bar' },
+              { value: 'atm', label: 'Atmosphere (atm)' },
+              { value: 'psi', label: 'Pound per Square Inch (psi)' },
+              { value: 'torr', label: 'Torr' }
+            ],
+            'angle': [
+              { value: 'deg', label: 'Degree (°)' },
+              { value: 'rad', label: 'Radian (rad)' },
+              { value: 'grad', label: 'Gradian (grad)' },
+              { value: 'turn', label: 'Turn' }
             ]
           };
           
           return units[mode] || [];
         }
 
-        convert(mode) {
+        convertFromTo(mode) {
           const fromValue = parseFloat(document.getElementById('from-value').value) || 0;
           const fromUnit = document.getElementById('from-unit').value;
           const toUnit = document.getElementById('to-unit').value;
@@ -1632,10 +1701,31 @@
           }
         }
 
-        performConversion(value, fromUnit, toUnit, mode) {
-          // This is a simplified conversion system
-          // In production, you'd want a comprehensive conversion library
+        convertToFrom(mode) {
+          const toValue = parseFloat(document.getElementById('to-value').value) || 0;
+          const fromUnit = document.getElementById('from-unit').value;
+          const toUnit = document.getElementById('to-unit').value;
           
+          if (fromUnit && toUnit) {
+            const result = this.performConversion(toValue, toUnit, fromUnit, mode);
+            document.getElementById('from-value').value = this.formatResult(result);
+          }
+        }
+
+        performConversion(value, fromUnit, toUnit, mode) {
+          if (fromUnit === toUnit) return value;
+          
+          // Temperature conversions (special case)
+          if (mode === 'temperature') {
+            const tempConversions = {
+              'c': { 'f': (c) => c * 9/5 + 32, 'k': (c) => c + 273.15 },
+              'f': { 'c': (f) => (f - 32) * 5/9, 'k': (f) => (f - 32) * 5/9 + 273.15 },
+              'k': { 'c': (k) => k - 273.15, 'f': (k) => (k - 273.15) * 9/5 + 32 }
+            };
+            return tempConversions[fromUnit][toUnit](value);
+          }
+          
+          // Comprehensive conversion tables
           const conversions = {
             'length': {
               'mm': 1,
@@ -1655,26 +1745,85 @@
               'lb': 453592,
               'ton': 1000000000
             },
-            'temperature': {
-              'c': (val) => val,
-              'f': (val) => (val - 32) * 5/9,
-              'k': (val) => val - 273.15
+            'volume': {
+              'ml': 1,
+              'l': 1000,
+              'floz': 29.5735,
+              'cup': 236.588,
+              'pt': 473.176,
+              'qt': 946.353,
+              'gal': 3785.41
+            },
+            'energy': {
+              'j': 1,
+              'kj': 1000,
+              'cal': 4.184,
+              'kcal': 4184,
+              'wh': 3600,
+              'kwh': 3600000,
+              'btu': 1055.06,
+              'therm': 105506000
+            },
+            'area': {
+              'mm2': 1,
+              'cm2': 100,
+              'm2': 1000000,
+              'km2': 1000000000000,
+              'in2': 645.16,
+              'ft2': 92903,
+              'yd2': 836127,
+              'acre': 4046856422.4
+            },
+            'speed': {
+              'mps': 1,
+              'kmh': 0.277778,
+              'mph': 0.44704,
+              'fps': 0.3048,
+              'knot': 0.514444
+            },
+            'time': {
+              'ms': 1,
+              's': 1000,
+              'min': 60000,
+              'h': 3600000,
+              'day': 86400000,
+              'week': 604800000,
+              'month': 2629746000,
+              'year': 31556952000
+            },
+            'power': {
+              'w': 1,
+              'kw': 1000,
+              'mw': 1000000,
+              'hp': 745.7,
+              'btu_h': 0.293071
+            },
+            'data': {
+              'bit': 1,
+              'byte': 8,
+              'kb': 8000,
+              'mb': 8000000,
+              'gb': 8000000000,
+              'tb': 8000000000000,
+              'pb': 8000000000000000
+            },
+            'pressure': {
+              'pa': 1,
+              'kpa': 1000,
+              'mpa': 1000000,
+              'bar': 100000,
+              'atm': 101325,
+              'psi': 6894.76,
+              'torr': 133.322
+            },
+            'angle': {
+              'deg': 1,
+              'rad': 57.2958,
+              'grad': 0.9,
+              'turn': 360
             }
           };
           
-          if (mode === 'temperature') {
-            // Special handling for temperature
-            const tempConversions = {
-              'c': { 'f': (c) => c * 9/5 + 32, 'k': (c) => c + 273.15 },
-              'f': { 'c': (f) => (f - 32) * 5/9, 'k': (f) => (f - 32) * 5/9 + 273.15 },
-              'k': { 'c': (k) => k - 273.15, 'f': (k) => (k - 273.15) * 9/5 + 32 }
-            };
-            
-            if (fromUnit === toUnit) return value;
-            return tempConversions[fromUnit][toUnit](value);
-          }
-          
-          // Standard conversions
           const conversionTable = conversions[mode];
           if (conversionTable && conversionTable[fromUnit] && conversionTable[toUnit]) {
             const baseValue = value * conversionTable[fromUnit];
