@@ -106,6 +106,9 @@
         display: flex;
         flex-direction: column;
         background: white;
+        overflow-y: auto;
+        overflow-x: hidden;
+        height: 100vh;
       }
       
       .content-header {
@@ -316,9 +319,9 @@
         background: #f8f9fa;
         border: 1px solid #e1e1e1;
         border-radius: 8px;
-        padding: 20px;
-      }
-      
+          padding: 20px;
+        }
+        
       .function-field {
         display: flex;
         align-items: center;
@@ -387,7 +390,7 @@
       }
       
       .converter-title {
-        font-size: 2rem;
+          font-size: 2rem;
         font-weight: 600;
         color: #323130;
         margin-bottom: 10px;
@@ -408,7 +411,7 @@
       }
       
       .unit-input {
-        padding: 15px;
+          padding: 15px;
         border: 2px solid #e1e1e1;
         border-radius: 8px;
         font-size: 1.2rem;
@@ -574,6 +577,33 @@
         max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
+        min-height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+      
+      /* Smooth scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+      
+      /* Custom scrollbar */
+      .unified-container::-webkit-scrollbar {
+        width: 8px;
+      }
+      
+      .unified-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+      }
+      
+      .unified-container::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 4px;
+      }
+      
+      .unified-container::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
       }
       
       .unified-header {
@@ -593,7 +623,7 @@
       }
       
       .unified-header p {
-        font-size: 1.2rem;
+          font-size: 1.2rem;
         margin: 0;
         opacity: 0.9;
       }
@@ -601,6 +631,7 @@
       .unified-grid {
         display: grid;
         gap: 30px;
+        padding-bottom: 50px;
       }
       
       .unified-section {
@@ -670,7 +701,7 @@
       .converter-card {
         background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
         border-radius: 10px;
-        padding: 15px;
+          padding: 15px;
         text-align: center;
         cursor: pointer;
         transition: all 0.3s ease;
@@ -1138,7 +1169,7 @@
       <div class="content-body">
         <!-- Standard Calculator -->
         <div id="standard-calculator" class="calculator-container">
-          <div class="display" id="display">0</div>
+      <div class="display" id="display">0</div>
           
           <div class="memory-controls">
             <button class="memory-btn" onclick="memoryClear()">MC</button>
@@ -1148,36 +1179,36 @@
             <button class="memory-btn" onclick="memoryStore()">MS</button>
           </div>
           
-          <div class="buttons">
+      <div class="buttons">
             <button class="btn clear" onclick="clearAll()">C</button>
             <button class="btn clear" onclick="clearEntry()">CE</button>
-            <button class="btn clear" onclick="deleteLast()">⌫</button>
-            <button class="btn operator" onclick="setOperator('/')">÷</button>
-            
-            <button class="btn" onclick="appendToDisplay('7')">7</button>
-            <button class="btn" onclick="appendToDisplay('8')">8</button>
-            <button class="btn" onclick="appendToDisplay('9')">9</button>
+        <button class="btn clear" onclick="deleteLast()">⌫</button>
+        <button class="btn operator" onclick="setOperator('/')">÷</button>
+        
+        <button class="btn" onclick="appendToDisplay('7')">7</button>
+        <button class="btn" onclick="appendToDisplay('8')">8</button>
+        <button class="btn" onclick="appendToDisplay('9')">9</button>
             <button class="btn operator" onclick="setOperator('*')">×</button>
-            
-            <button class="btn" onclick="appendToDisplay('4')">4</button>
-            <button class="btn" onclick="appendToDisplay('5')">5</button>
-            <button class="btn" onclick="appendToDisplay('6')">6</button>
+        
+        <button class="btn" onclick="appendToDisplay('4')">4</button>
+        <button class="btn" onclick="appendToDisplay('5')">5</button>
+        <button class="btn" onclick="appendToDisplay('6')">6</button>
             <button class="btn operator" onclick="setOperator('-')">-</button>
-            
-            <button class="btn" onclick="appendToDisplay('1')">1</button>
-            <button class="btn" onclick="appendToDisplay('2')">2</button>
-            <button class="btn" onclick="appendToDisplay('3')">3</button>
+        
+        <button class="btn" onclick="appendToDisplay('1')">1</button>
+        <button class="btn" onclick="appendToDisplay('2')">2</button>
+        <button class="btn" onclick="appendToDisplay('3')">3</button>
             <button class="btn operator" onclick="setOperator('+')">+</button>
-            
-            <button class="btn zero" onclick="appendToDisplay('0')">0</button>
-            <button class="btn" onclick="appendToDisplay('.')">.</button>
+        
+        <button class="btn zero" onclick="appendToDisplay('0')">0</button>
+        <button class="btn" onclick="appendToDisplay('.')">.</button>
             <button class="btn equals" onclick="calculate()">=</button>
-            
-            <!-- Advanced Operations Row -->
-            <button class="btn advanced" onclick="percentage()">%</button>
-            <button class="btn advanced" onclick="squareRoot()">√</button>
-            <button class="btn advanced" onclick="square()">x²</button>
-            <button class="btn advanced" onclick="toggleSign()">±</button>
+        
+        <!-- Advanced Operations Row -->
+        <button class="btn advanced" onclick="percentage()">%</button>
+        <button class="btn advanced" onclick="squareRoot()">√</button>
+        <button class="btn advanced" onclick="square()">x²</button>
+        <button class="btn advanced" onclick="toggleSign()">±</button>
           </div>
         </div>
         
@@ -1699,7 +1730,7 @@
           if (this.operator && this.previousInput !== null) {
             const operatorSymbol = this.operator === '*' ? '×' : this.operator === '/' ? '÷' : this.operator;
             display.textContent = `${this.previousInput} ${operatorSymbol} ${this.currentInput}`;
-          } else {
+        } else {
             display.textContent = this.currentInput;
           }
         }
@@ -1760,28 +1791,28 @@
           if (this.operator && this.previousInput !== null) {
             const prev = parseFloat(this.previousInput);
             const current = parseFloat(this.currentInput);
-            let result;
+          let result;
 
             switch (this.operator) {
-              case '+':
-                result = prev + current;
-                break;
-              case '-':
-                result = prev - current;
-                break;
-              case '*':
-                result = prev * current;
-                break;
-              case '/':
-                if (current === 0) {
-                  alert('Cannot divide by zero!');
-                  return;
-                }
-                result = prev / current;
-                break;
-              default:
+            case '+':
+              result = prev + current;
+              break;
+            case '-':
+              result = prev - current;
+              break;
+            case '*':
+              result = prev * current;
+              break;
+            case '/':
+              if (current === 0) {
+                alert('Cannot divide by zero!');
                 return;
-            }
+              }
+              result = prev / current;
+              break;
+            default:
+              return;
+          }
 
             const operatorSymbol = this.operator === '*' ? '×' : this.operator === '/' ? '÷' : this.operator;
             const expression = `${this.previousInput} ${operatorSymbol} ${this.currentInput}`;
