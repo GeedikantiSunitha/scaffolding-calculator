@@ -1,13 +1,13 @@
 # Dependencies
-node_modules/
+node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
 # Build outputs
-dist/
-build/
-coverage/
+dist
+build
+coverage
 
 # Environment files
 .env
@@ -17,8 +17,8 @@ coverage/
 .env.production.local
 
 # IDE files
-.vscode/
-.idea/
+.vscode
+.idea
 *.swp
 *.swo
 
@@ -31,12 +31,21 @@ coverage/
 ehthumbs.db
 Thumbs.db
 
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
 # Logs
-logs/
+logs
 *.log
 
 # Runtime data
-pids/
+pids
 *.pid
 *.seed
 *.pid.lock
@@ -61,14 +70,3 @@ pids/
 
 # Yarn Integrity file
 .yarn-integrity
-
-# Windows specific
-AppData/
-Local/
-Documents/
-Desktop/
-Downloads/
-Music/
-Pictures/
-Videos/
-.vscode/

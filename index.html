@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Calculator App</title>
+    <title>Advanced Calculator App</title>
     <style>
       * {
         margin: 0;
@@ -21,26 +21,68 @@
         padding: 20px;
       }
       
-      .calculator {
+      .calculator-container {
+        display: flex;
         background: rgba(255, 255, 255, 0.95);
         border-radius: 20px;
-        padding: 30px;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         backdrop-filter: blur(10px);
-        max-width: 400px;
+        max-width: 1000px;
         width: 100%;
+        min-height: 600px;
+      }
+      
+      .calculator-main {
+        flex: 1;
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .calculator-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      
+      .calculator-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+      
+      .mode-selector {
+        display: flex;
+        gap: 10px;
+      }
+      
+      .mode-btn {
+        padding: 8px 16px;
+        border: 2px solid #3498db;
+        background: transparent;
+        color: #3498db;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
+      }
+      
+      .mode-btn.active {
+        background: #3498db;
+        color: white;
       }
       
       .display {
         background: #2c3e50;
         color: white;
-        font-size: 2rem;
+        font-size: 2.5rem;
         font-weight: 300;
         text-align: right;
-        padding: 20px;
-        border-radius: 10px;
+        padding: 25px;
+        border-radius: 15px;
         margin-bottom: 20px;
-        min-height: 100px;
+        min-height: 120px;
         display: flex;
         flex-direction: column;
         align-items: flex-end;
@@ -51,17 +93,43 @@
         line-height: 1.2;
       }
       
+      .memory-controls {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        justify-content: center;
+      }
+      
+      .memory-btn {
+        background: #9b59b6;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        padding: 12px 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: white;
+        min-width: 60px;
+      }
+      
+      .memory-btn:hover {
+        background: #8e44ad;
+        transform: translateY(-2px);
+      }
+      
       .buttons {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         grid-template-rows: repeat(6, 1fr);
         gap: 15px;
+        flex: 1;
       }
       
       .btn {
         background: #ecf0f1;
         border: none;
-        border-radius: 10px;
+        border-radius: 12px;
         font-size: 1.5rem;
         font-weight: 500;
         padding: 20px;
@@ -119,14 +187,120 @@
         grid-column: span 2;
       }
       
-      @media (max-width: 480px) {
-        .calculator {
+      .btn.equals {
+        grid-row: span 2;
+      }
+      
+      .sidebar {
+        width: 300px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 0 20px 20px 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .sidebar-tabs {
+        display: flex;
+        margin-bottom: 20px;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+      }
+      
+      .tab {
+        flex: 1;
+        padding: 12px;
+        background: transparent;
+        border: none;
+        color: #2c3e50;
+        font-weight: 500;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        transition: all 0.2s ease;
+      }
+      
+      .tab.active {
+        border-bottom-color: #3498db;
+        color: #3498db;
+      }
+      
+      .tab-content {
+        flex: 1;
+        overflow-y: auto;
+      }
+      
+      .history-item, .memory-item {
+        padding: 12px;
+        margin-bottom: 8px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 8px;
+        border-left: 4px solid #3498db;
+      }
+      
+      .history-expression {
+        font-size: 1rem;
+        color: #2c3e50;
+        margin-bottom: 4px;
+      }
+      
+      .history-result {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #e74c3c;
+      }
+      
+      .memory-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 4px;
+      }
+      
+      .memory-timestamp {
+        font-size: 0.8rem;
+        color: #7f8c8d;
+      }
+      
+      .clear-btn {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        margin-top: 10px;
+        width: 100%;
+      }
+      
+      .clear-btn:hover {
+        background: #c0392b;
+      }
+      
+      .empty-state {
+        text-align: center;
+        color: #7f8c8d;
+        font-style: italic;
+        padding: 40px 20px;
+      }
+      
+      @media (max-width: 768px) {
+        .calculator-container {
+          flex-direction: column;
+          max-width: 400px;
+        }
+        
+        .sidebar {
+          width: 100%;
+          border-radius: 0 0 20px 20px;
+        }
+        
+        .calculator-main {
           padding: 20px;
         }
         
         .display {
           font-size: 2rem;
-          padding: 15px;
+          padding: 20px;
         }
         
         .btn {
@@ -137,190 +311,434 @@
     </style>
   </head>
   <body>
-    <div class="calculator">
-      <div class="display" id="display">0</div>
-      <div class="buttons">
-        <button class="btn clear" onclick="clearDisplay()">C</button>
-        <button class="btn clear" onclick="deleteLast()">⌫</button>
-        <button class="btn operator" onclick="setOperator('/')">÷</button>
-        <button class="btn operator" onclick="setOperator('*')">×</button>
+    <div class="calculator-container">
+      <div class="calculator-main">
+        <div class="calculator-header">
+          <div class="calculator-title">Advanced Calculator</div>
+          <div class="mode-selector">
+            <button class="mode-btn active" onclick="setMode('standard')">Standard</button>
+            <button class="mode-btn" onclick="setMode('scientific')">Scientific</button>
+          </div>
+        </div>
         
-        <button class="btn" onclick="appendToDisplay('7')">7</button>
-        <button class="btn" onclick="appendToDisplay('8')">8</button>
-        <button class="btn" onclick="appendToDisplay('9')">9</button>
-        <button class="btn operator" onclick="setOperator('-')">-</button>
+        <div class="display" id="display">0</div>
         
-        <button class="btn" onclick="appendToDisplay('4')">4</button>
-        <button class="btn" onclick="appendToDisplay('5')">5</button>
-        <button class="btn" onclick="appendToDisplay('6')">6</button>
-        <button class="btn operator" onclick="setOperator('+')">+</button>
+        <div class="memory-controls">
+          <button class="memory-btn" onclick="memoryClear()">MC</button>
+          <button class="memory-btn" onclick="memoryRecall()">MR</button>
+          <button class="memory-btn" onclick="memoryAdd()">M+</button>
+          <button class="memory-btn" onclick="memorySubtract()">M-</button>
+          <button class="memory-btn" onclick="memoryStore()">MS</button>
+        </div>
         
-        <button class="btn" onclick="appendToDisplay('1')">1</button>
-        <button class="btn" onclick="appendToDisplay('2')">2</button>
-        <button class="btn" onclick="appendToDisplay('3')">3</button>
-        <button class="btn equals" onclick="calculate()" rowspan="2">=</button>
+        <div class="buttons">
+          <button class="btn clear" onclick="clearAll()">C</button>
+          <button class="btn clear" onclick="clearEntry()">CE</button>
+          <button class="btn clear" onclick="deleteLast()">⌫</button>
+          <button class="btn operator" onclick="setOperator('/')">÷</button>
+          
+          <button class="btn" onclick="appendToDisplay('7')">7</button>
+          <button class="btn" onclick="appendToDisplay('8')">8</button>
+          <button class="btn" onclick="appendToDisplay('9')">9</button>
+          <button class="btn operator" onclick="setOperator('*')">×</button>
+          
+          <button class="btn" onclick="appendToDisplay('4')">4</button>
+          <button class="btn" onclick="appendToDisplay('5')">5</button>
+          <button class="btn" onclick="appendToDisplay('6')">6</button>
+          <button class="btn operator" onclick="setOperator('-')">-</button>
+          
+          <button class="btn" onclick="appendToDisplay('1')">1</button>
+          <button class="btn" onclick="appendToDisplay('2')">2</button>
+          <button class="btn" onclick="appendToDisplay('3')">3</button>
+          <button class="btn operator" onclick="setOperator('+')">+</button>
+          
+          <button class="btn zero" onclick="appendToDisplay('0')">0</button>
+          <button class="btn" onclick="appendToDisplay('.')">.</button>
+          <button class="btn equals" onclick="calculate()">=</button>
+          
+          <!-- Advanced Operations Row -->
+          <button class="btn advanced" onclick="percentage()">%</button>
+          <button class="btn advanced" onclick="squareRoot()">√</button>
+          <button class="btn advanced" onclick="square()">x²</button>
+          <button class="btn advanced" onclick="toggleSign()">±</button>
+        </div>
+      </div>
+      
+      <div class="sidebar">
+        <div class="sidebar-tabs">
+          <button class="tab active" onclick="showTab('history')">History</button>
+          <button class="tab" onclick="showTab('memory')">Memory</button>
+        </div>
         
-        <button class="btn zero" onclick="appendToDisplay('0')">0</button>
-        <button class="btn" onclick="appendToDisplay('.')">.</button>
-        
-        <!-- Advanced Operations Row -->
-        <button class="btn advanced" onclick="percentage()">%</button>
-        <button class="btn advanced" onclick="squareRoot()">√</button>
-        <button class="btn advanced" onclick="square()">x²</button>
-        <button class="btn advanced" onclick="toggleSign()">±</button>
+        <div class="tab-content">
+          <div id="history-content" class="tab-panel">
+            <div id="history-list"></div>
+            <button class="clear-btn" onclick="clearHistory()">Clear History</button>
+          </div>
+          
+          <div id="memory-content" class="tab-panel" style="display: none;">
+            <div id="memory-list"></div>
+            <button class="clear-btn" onclick="clearMemory()">Clear Memory</button>
+          </div>
+        </div>
       </div>
     </div>
 
+    <script src="calculator.js"></script>
     <script>
-      let display = document.getElementById('display');
-      let currentInput = '0';
-      let operator = null;
-      let previousInput = null;
-      let shouldResetDisplay = false;
-
-      function updateDisplay() {
-        if (operator && previousInput !== null) {
-          // Show the full calculation expression
-          const operatorSymbol = operator === '*' ? '×' : operator === '/' ? '÷' : operator;
-          display.textContent = `${previousInput} ${operatorSymbol} ${currentInput}`;
-        } else {
-          display.textContent = currentInput;
-        }
-      }
-
-      function appendToDisplay(value) {
-        if (shouldResetDisplay) {
-          currentInput = '';
-          shouldResetDisplay = false;
+      // Enhanced Calculator with History and Memory
+      class AdvancedCalculator {
+        constructor() {
+          this.currentInput = '0';
+          this.operator = null;
+          this.previousInput = null;
+          this.shouldResetDisplay = false;
+          this.history = this.loadHistory();
+          this.memory = this.loadMemory();
+          this.mode = 'standard';
         }
 
-        if (value === '.' && currentInput.includes('.')) {
-          return;
+        // Display Management
+        updateDisplay() {
+          const display = document.getElementById('display');
+          if (this.operator && this.previousInput !== null) {
+            const operatorSymbol = this.operator === '*' ? '×' : this.operator === '/' ? '÷' : this.operator;
+            display.textContent = `${this.previousInput} ${operatorSymbol} ${this.currentInput}`;
+          } else {
+            display.textContent = this.currentInput;
+          }
         }
 
-        if (currentInput === '0' && value !== '.') {
-          currentInput = value;
-        } else {
-          currentInput += value;
-        }
-
-        updateDisplay();
-      }
-
-      function clearDisplay() {
-        currentInput = '0';
-        operator = null;
-        previousInput = null;
-        shouldResetDisplay = false;
-        updateDisplay();
-      }
-
-      function deleteLast() {
-        if (currentInput.length > 1) {
-          currentInput = currentInput.slice(0, -1);
-        } else {
-          currentInput = '0';
-        }
-        updateDisplay();
-      }
-
-      function setOperator(op) {
-        if (operator && previousInput !== null) {
-          calculate();
-        }
-        
-        operator = op;
-        previousInput = currentInput;
-        shouldResetDisplay = true;
-        updateDisplay();
-      }
-
-      function percentage() {
-        const value = parseFloat(currentInput);
-        const result = (value / 100);
-        const formattedResult = result.toString();
-        // Show the percentage operation in display
-        display.textContent = `${currentInput}% =\n${formattedResult}`;
-        currentInput = formattedResult;
-        shouldResetDisplay = true;
-      }
-
-      function squareRoot() {
-        const value = parseFloat(currentInput);
-        if (value < 0) {
-          alert('Cannot calculate square root of negative number!');
-          return;
-        }
-        const result = Math.sqrt(value);
-        // Format result to avoid floating point precision issues
-        const formattedResult = result.toFixed(15).replace(/\.?0+$/, '');
-        // Show the square root operation in display
-        display.textContent = `√${currentInput} =\n${formattedResult}`;
-        currentInput = formattedResult;
-        shouldResetDisplay = true;
-      }
-
-      function square() {
-        const value = parseFloat(currentInput);
-        const result = (value * value);
-        const formattedResult = result.toString();
-        // Show the square operation in display
-        display.textContent = `${currentInput}² =\n${formattedResult}`;
-        currentInput = formattedResult;
-        shouldResetDisplay = true;
-      }
-
-      function toggleSign() {
-        if (currentInput !== '0') {
-          const oldValue = currentInput;
-          currentInput = currentInput.startsWith('-') 
-            ? currentInput.slice(1) 
-            : '-' + currentInput;
-          // Show the sign toggle operation in display
-          display.textContent = `${oldValue} → ${currentInput}`;
-        }
-      }
-
-      function calculate() {
-        if (operator && previousInput !== null) {
-          const prev = parseFloat(previousInput);
-          const current = parseFloat(currentInput);
-          let result;
-
-          switch (operator) {
-            case '+':
-              result = prev + current;
-              break;
-            case '-':
-              result = prev - current;
-              break;
-            case '*':
-              result = prev * current;
-              break;
-            case '/':
-              if (current === 0) {
-                alert('Cannot divide by zero!');
-                return;
-              }
-              result = prev / current;
-              break;
-            default:
-              return;
+        appendToDisplay(value) {
+          if (this.shouldResetDisplay) {
+            this.currentInput = '';
+            this.shouldResetDisplay = false;
           }
 
-          const operatorSymbol = operator === '*' ? '×' : operator === '/' ? '÷' : operator;
-          const formattedResult = result.toString();
-          // Show the full calculation and result
-          display.textContent = `${previousInput} ${operatorSymbol} ${currentInput} =\n${formattedResult}`;
-          currentInput = formattedResult;
-          operator = null;
-          previousInput = null;
-          shouldResetDisplay = true;
+          if (value === '.' && this.currentInput.includes('.')) {
+            return;
+          }
+
+          if (this.currentInput === '0' && value !== '.') {
+            this.currentInput = value;
+          } else {
+            this.currentInput += value;
+          }
+
+          this.updateDisplay();
+        }
+
+        clearAll() {
+          this.currentInput = '0';
+          this.operator = null;
+          this.previousInput = null;
+          this.shouldResetDisplay = false;
+          this.updateDisplay();
+        }
+
+        clearEntry() {
+          this.currentInput = '0';
+          this.updateDisplay();
+        }
+
+        deleteLast() {
+          if (this.currentInput.length > 1) {
+            this.currentInput = this.currentInput.slice(0, -1);
+          } else {
+            this.currentInput = '0';
+          }
+          this.updateDisplay();
+        }
+
+        setOperator(op) {
+          if (this.operator && this.previousInput !== null) {
+            this.calculate();
+          }
+          
+          this.operator = op;
+          this.previousInput = this.currentInput;
+          this.shouldResetDisplay = true;
+          this.updateDisplay();
+        }
+
+        calculate() {
+          if (this.operator && this.previousInput !== null) {
+            const prev = parseFloat(this.previousInput);
+            const current = parseFloat(this.currentInput);
+            let result;
+
+            switch (this.operator) {
+              case '+':
+                result = prev + current;
+                break;
+              case '-':
+                result = prev - current;
+                break;
+              case '*':
+                result = prev * current;
+                break;
+              case '/':
+                if (current === 0) {
+                  alert('Cannot divide by zero!');
+                  return;
+                }
+                result = prev / current;
+                break;
+              default:
+                return;
+            }
+
+            const operatorSymbol = this.operator === '*' ? '×' : this.operator === '/' ? '÷' : this.operator;
+            const expression = `${this.previousInput} ${operatorSymbol} ${this.currentInput}`;
+            
+            // Add to history
+            this.addToHistory(expression, result);
+            
+            this.currentInput = this.formatResult(result);
+            this.operator = null;
+            this.previousInput = null;
+            this.shouldResetDisplay = true;
+            this.updateDisplay();
+          }
+        }
+
+        formatResult(result) {
+          if (Math.abs(result) > 1e10 || (Math.abs(result) < 1e-6 && result !== 0)) {
+            return result.toExponential(6).replace(/\.?0+e/, 'e');
+          }
+          return parseFloat(result.toPrecision(12)).toString();
+        }
+
+        // Advanced Operations
+        percentage() {
+          const value = parseFloat(this.currentInput);
+          const result = value / 100;
+          this.addToHistory(`${this.currentInput}%`, result);
+          this.currentInput = result.toString();
+          this.shouldResetDisplay = true;
+          this.updateDisplay();
+        }
+
+        squareRoot() {
+          const value = parseFloat(this.currentInput);
+          if (value < 0) {
+            alert('Cannot calculate square root of negative number!');
+            return;
+          }
+          const result = Math.sqrt(value);
+          this.addToHistory(`√${this.currentInput}`, result);
+          this.currentInput = this.formatResult(result);
+          this.shouldResetDisplay = true;
+          this.updateDisplay();
+        }
+
+        square() {
+          const value = parseFloat(this.currentInput);
+          const result = value * value;
+          this.addToHistory(`${this.currentInput}²`, result);
+          this.currentInput = result.toString();
+          this.shouldResetDisplay = true;
+          this.updateDisplay();
+        }
+
+        toggleSign() {
+          if (this.currentInput !== '0') {
+            this.currentInput = this.currentInput.startsWith('-') 
+              ? this.currentInput.slice(1) 
+              : '-' + this.currentInput;
+            this.updateDisplay();
+          }
+        }
+
+        // Memory Functions
+        memoryStore() {
+          const value = parseFloat(this.currentInput);
+          if (!isNaN(value)) {
+            const timestamp = new Date();
+            this.memory.push({
+              value: value,
+              timestamp: timestamp.toISOString(),
+              timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+            });
+            this.saveMemory();
+            this.updateMemoryDisplay();
+          }
+        }
+
+        memoryRecall() {
+          if (this.memory.length > 0) {
+            const lastMemory = this.memory[this.memory.length - 1];
+            this.currentInput = lastMemory.value.toString();
+            this.shouldResetDisplay = true;
+            this.updateDisplay();
+          }
+        }
+
+        memoryAdd() {
+          if (this.memory.length > 0) {
+            const value = parseFloat(this.currentInput);
+            const lastMemory = this.memory[this.memory.length - 1];
+            lastMemory.value += value;
+            lastMemory.timestamp = new Date().toISOString();
+            this.saveMemory();
+            this.updateMemoryDisplay();
+          }
+        }
+
+        memorySubtract() {
+          if (this.memory.length > 0) {
+            const value = parseFloat(this.currentInput);
+            const lastMemory = this.memory[this.memory.length - 1];
+            lastMemory.value -= value;
+            lastMemory.timestamp = new Date().toISOString();
+            this.saveMemory();
+            this.updateMemoryDisplay();
+          }
+        }
+
+        memoryClear() {
+          this.memory = [];
+          this.saveMemory();
+          this.updateMemoryDisplay();
+        }
+
+        // History Management
+        addToHistory(expression, result) {
+          const timestamp = new Date();
+          this.history.push({
+            expression: expression,
+            result: result,
+            timestamp: timestamp.toISOString(),
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+          });
+          this.saveHistory();
+          this.updateHistoryDisplay();
+        }
+
+        clearHistory() {
+          this.history = [];
+          this.saveHistory();
+          this.updateHistoryDisplay();
+        }
+
+        clearMemory() {
+          this.memory = [];
+          this.saveMemory();
+          this.updateMemoryDisplay();
+        }
+
+        // Local Storage
+        saveHistory() {
+          localStorage.setItem('calculatorHistory', JSON.stringify(this.history));
+        }
+
+        loadHistory() {
+          const saved = localStorage.getItem('calculatorHistory');
+          return saved ? JSON.parse(saved) : [];
+        }
+
+        saveMemory() {
+          localStorage.setItem('calculatorMemory', JSON.stringify(this.memory));
+        }
+
+        loadMemory() {
+          const saved = localStorage.getItem('calculatorMemory');
+          return saved ? JSON.parse(saved) : [];
+        }
+
+        // Display Updates
+        updateHistoryDisplay() {
+          const historyList = document.getElementById('history-list');
+          if (this.history.length === 0) {
+            historyList.innerHTML = '<div class="empty-state">No calculations yet</div>';
+            return;
+          }
+
+          historyList.innerHTML = this.history.slice(-10).reverse().map(item => `
+            <div class="history-item">
+              <div class="history-expression">${item.expression}</div>
+              <div class="history-result">${this.formatResult(item.result)}</div>
+              <div class="memory-timestamp">${this.formatTimestamp(item.timestamp, item.timezone)}</div>
+            </div>
+          `).join('');
+        }
+
+        updateMemoryDisplay() {
+          const memoryList = document.getElementById('memory-list');
+          if (this.memory.length === 0) {
+            memoryList.innerHTML = '<div class="empty-state">No values stored in memory</div>';
+            return;
+          }
+
+          memoryList.innerHTML = this.memory.slice(-10).reverse().map(item => `
+            <div class="memory-item">
+              <div class="memory-value">${this.formatResult(item.value)}</div>
+              <div class="memory-timestamp">${this.formatTimestamp(item.timestamp, item.timezone)}</div>
+            </div>
+          `).join('');
+        }
+
+        formatTimestamp(timestamp, timezone) {
+          const date = new Date(timestamp);
+          return date.toLocaleString('en-US', {
+            timeZone: timezone,
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZoneName: 'short'
+          });
+        }
+
+        // Mode Management
+        setMode(mode) {
+          this.mode = mode;
+          document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+          event.target.classList.add('active');
         }
       }
 
+      // Global calculator instance
+      const calculator = new AdvancedCalculator();
 
-      // Keyboard support
+      // Global functions for HTML onclick handlers
+      function appendToDisplay(value) { calculator.appendToDisplay(value); }
+      function clearAll() { calculator.clearAll(); }
+      function clearEntry() { calculator.clearEntry(); }
+      function deleteLast() { calculator.deleteLast(); }
+      function setOperator(op) { calculator.setOperator(op); }
+      function calculate() { calculator.calculate(); }
+      function percentage() { calculator.percentage(); }
+      function squareRoot() { calculator.squareRoot(); }
+      function square() { calculator.square(); }
+      function toggleSign() { calculator.toggleSign(); }
+      function memoryStore() { calculator.memoryStore(); }
+      function memoryRecall() { calculator.memoryRecall(); }
+      function memoryAdd() { calculator.memoryAdd(); }
+      function memorySubtract() { calculator.memorySubtract(); }
+      function memoryClear() { calculator.memoryClear(); }
+      function clearHistory() { calculator.clearHistory(); }
+      function clearMemory() { calculator.clearMemory(); }
+      function setMode(mode) { calculator.setMode(mode); }
+
+      // Tab Management
+      function showTab(tabName) {
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(panel => panel.style.display = 'none');
+        
+        event.target.classList.add('active');
+        document.getElementById(tabName + '-content').style.display = 'block';
+        
+        if (tabName === 'history') {
+          calculator.updateHistoryDisplay();
+        } else if (tabName === 'memory') {
+          calculator.updateMemoryDisplay();
+        }
+      }
+
+      // Keyboard Support
       document.addEventListener('keydown', function(event) {
         const key = event.key;
         
@@ -332,13 +750,16 @@
           event.preventDefault();
           calculate();
         } else if (key === 'Escape' || key === 'c' || key === 'C') {
-          clearDisplay();
+          clearAll();
         } else if (key === 'Backspace') {
           deleteLast();
         }
       });
 
-      updateDisplay();
+      // Initialize display
+      calculator.updateDisplay();
+      calculator.updateHistoryDisplay();
+      calculator.updateMemoryDisplay();
     </script>
   </body>
 </html>

@@ -1,17 +1,21 @@
-# Calculator App
+# Advanced Calculator App
 
-A modern, responsive calculator application built with vanilla JavaScript, featuring a clean UI and comprehensive functionality.
+A modern, responsive calculator application built with vanilla JavaScript, featuring a clean UI, comprehensive functionality, and advanced features including history tracking and memory management with date/time/zone information.
 
 ## Features
 
 - ✅ **Basic Operations**: Addition, subtraction, multiplication, division
 - ✅ **Advanced Functions**: Square root, square, percentage, sign toggle
+- ✅ **Memory Management**: MC (Memory Clear), MR (Memory Recall), M+ (Memory Add), M- (Memory Subtract), MS (Memory Store)
+- ✅ **History Tracking**: Complete calculation history with timestamps and timezone information
+- ✅ **Persistent Storage**: History and memory data saved in browser localStorage
 - ✅ **User-Friendly Interface**: Modern glassmorphism design with smooth animations
+- ✅ **Sidebar Panels**: Dedicated History and Memory panels with tabbed interface
 - ✅ **Keyboard Support**: Full keyboard navigation and operation
 - ✅ **Responsive Design**: Works perfectly on desktop and mobile devices
 - ✅ **Error Handling**: Proper handling of edge cases (division by zero, etc.)
-- ✅ **Calculation History**: Keeps track of previous calculations
 - ✅ **Floating Point Precision**: Handles decimal calculations accurately
+- ✅ **Docker Support**: Complete containerization with production-ready configuration
 
 ## Quick Start
 
@@ -31,6 +35,29 @@ A modern, responsive calculator application built with vanilla JavaScript, featu
    ```
 4. **Open your browser** and navigate to the provided local URL
 
+### Option 3: Docker Deployment
+1. **Build and run with Docker Compose**:
+   ```bash
+   docker-compose up --build
+   ```
+2. **Access the application** at `http://localhost:3000`
+
+3. **For production with Nginx reverse proxy**:
+   ```bash
+   docker-compose --profile production up --build
+   ```
+   Access at `http://localhost:80`
+
+4. **Run in background**:
+   ```bash
+   docker-compose up -d
+   ```
+
+5. **Stop the application**:
+   ```bash
+   docker-compose down
+   ```
+
 ## Usage
 
 ### Mouse/Touch Controls
@@ -48,6 +75,27 @@ A modern, responsive calculator application built with vanilla JavaScript, featu
 - **Backspace**: Delete last digit
 - **Decimal Point**: `.` for decimal numbers
 
+## Advanced Features
+
+### Memory Management
+- **MC (Memory Clear)**: Clears all stored memory values
+- **MR (Memory Recall)**: Recalls the last stored memory value to display
+- **M+ (Memory Add)**: Adds current display value to the last memory value
+- **M- (Memory Subtract)**: Subtracts current display value from the last memory value
+- **MS (Memory Store)**: Stores current display value in memory with timestamp
+
+### History Tracking
+- **Automatic Logging**: All calculations are automatically logged with timestamps
+- **Timezone Support**: Each entry includes date, time, and timezone information
+- **Persistent Storage**: History is saved in browser localStorage and persists between sessions
+- **Clear History**: Option to clear all calculation history
+
+### Memory Storage
+- **Timestamp Tracking**: Each memory entry includes precise date and time
+- **Timezone Information**: Automatically detects and stores user's timezone
+- **Persistent Storage**: Memory values are saved and restored between sessions
+- **Visual Display**: Memory panel shows stored values with timestamps
+
 ## Project Structure
 
 ```
@@ -56,6 +104,10 @@ calculator-app/
 ├── calculator.js       # Core calculator logic (modular approach)
 ├── calculator.test.js  # Comprehensive test suite
 ├── package.json        # Project configuration and dependencies
+├── Dockerfile          # Docker container configuration
+├── docker-compose.yml  # Docker Compose configuration
+├── nginx.conf          # Nginx configuration for production
+├── .dockerignore       # Docker build context exclusions
 └── README.md          # This file
 ```
 
@@ -66,6 +118,8 @@ calculator-app/
 - **Styling**: Modern CSS with glassmorphism effects and responsive design
 - **Logic**: Object-oriented calculator class with comprehensive error handling
 - **Testing**: Jest test suite covering all functionality and edge cases
+- **Containerization**: Docker support with multi-stage builds and production-ready configuration
+- **Deployment**: Docker Compose with optional Nginx reverse proxy for production
 
 ### Key Features
 - **Responsive Grid Layout**: Adapts to different screen sizes
@@ -97,6 +151,62 @@ npm run build
 ```bash
 npm run preview
 ```
+
+## Docker Deployment
+
+### Prerequisites
+- Docker and Docker Compose installed on your system
+- Basic knowledge of Docker commands
+
+### Quick Start with Docker
+```bash
+# Build and run the application
+docker-compose up --build
+
+# Run in detached mode (background)
+docker-compose up -d --build
+
+# View logs
+docker-compose logs -f
+
+# Stop the application
+docker-compose down
+```
+
+### Production Deployment
+For production deployment with Nginx reverse proxy:
+
+```bash
+# Start with production profile
+docker-compose --profile production up --build -d
+
+# The application will be available at http://localhost:80
+```
+
+### Docker Commands Reference
+```bash
+# Build only
+docker-compose build
+
+# Rebuild without cache
+docker-compose build --no-cache
+
+# Scale the application (if needed)
+docker-compose up --scale calculator-app=2
+
+# View container status
+docker-compose ps
+
+# Execute commands inside container
+docker-compose exec calculator-app sh
+```
+
+### Docker Configuration Details
+- **Base Image**: Node.js 18 Alpine (lightweight and secure)
+- **Port**: 3000 (configurable in docker-compose.yml)
+- **Health Checks**: Built-in health monitoring
+- **Production Ready**: Optimized build with serve static files
+- **Nginx Integration**: Optional reverse proxy for production
 
 ## Customization
 
