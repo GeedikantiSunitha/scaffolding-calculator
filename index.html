@@ -367,8 +367,18 @@
       
       /* Converter Styles */
       .converter-container {
-        max-width: 600px;
+        max-width: 800px;
         margin: 0 auto;
+      }
+      
+      .converter-layout {
+        display: flex;
+        gap: 30px;
+        align-items: flex-start;
+      }
+      
+      .conversion-section {
+        flex: 1;
       }
       
       .converter-header {
@@ -388,6 +398,7 @@
         grid-template-columns: 1fr auto 1fr;
         gap: 20px;
         align-items: center;
+        margin-bottom: 30px;
       }
       
       .conversion-unit {
@@ -426,6 +437,136 @@
         font-size: 2rem;
         color: #0078d4;
         text-align: center;
+      }
+      
+      /* Additional Conversions Display */
+      .additional-conversions {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 20px;
+      }
+      
+      .conversion-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #323130;
+        margin-bottom: 15px;
+      }
+      
+      .conversion-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+      }
+      
+      .conversion-item {
+        background: white;
+        padding: 10px 15px;
+        border-radius: 6px;
+        border-left: 4px solid #0078d4;
+        font-size: 0.9rem;
+        color: #323130;
+      }
+      
+      .conversion-value {
+        font-weight: 600;
+        color: #0078d4;
+      }
+      
+      .conversion-unit-label {
+        color: #6c757d;
+        font-size: 0.8rem;
+      }
+      
+      /* Converter Keypad Styles */
+      .converter-keypad {
+        width: 200px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      
+      .keypad-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      
+      .keypad-row:last-child {
+        margin-bottom: 0;
+      }
+      
+      .keypad-btn {
+        flex: 1;
+        background: white;
+        border: 1px solid #e1e1e1;
+        border-radius: 6px;
+        padding: 12px 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        color: #323130;
+      }
+      
+      .keypad-btn:hover {
+        background: #e9ecef;
+        transform: translateY(-1px);
+      }
+      
+      .keypad-btn:active {
+        transform: translateY(0);
+        background: #dee2e6;
+      }
+      
+      .keypad-btn.clear {
+        background: #dc3545;
+        color: white;
+        border-color: #dc3545;
+      }
+      
+      .keypad-btn.clear:hover {
+        background: #c82333;
+        border-color: #c82333;
+      }
+      
+      .keypad-btn.zero {
+        flex: 2;
+      }
+      
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .converter-layout {
+          flex-direction: column;
+          gap: 20px;
+        }
+        
+        .converter-keypad {
+          width: 100%;
+          max-width: 300px;
+          margin: 0 auto;
+        }
+        
+        .conversion-grid {
+          grid-template-columns: 1fr;
+          gap: 15px;
+        }
+        
+        .conversion-arrow {
+          transform: rotate(90deg);
+          font-size: 1.5rem;
+        }
+        
+        .conversion-list {
+          grid-template-columns: 1fr;
+        }
+        
+        .keypad-btn {
+          padding: 15px 8px;
+          font-size: 1.1rem;
+        }
       }
       
       /* Programmer Calculator Styles */
@@ -1026,17 +1167,54 @@
               <div class="converter-title" id="converter-title">Converter</div>
             </div>
             
-            <div class="conversion-grid">
-              <div class="conversion-unit">
-                <input type="number" class="unit-input" id="from-value" placeholder="0">
-                <select class="unit-select" id="from-unit"></select>
+            <div class="converter-layout">
+              <div class="conversion-section">
+                <div class="conversion-grid">
+                  <div class="conversion-unit">
+                    <input type="number" class="unit-input" id="from-value" placeholder="0">
+                    <select class="unit-select" id="from-unit"></select>
+                  </div>
+                  
+                  <div class="conversion-arrow">⇄</div>
+                  
+                  <div class="conversion-unit">
+                    <input type="number" class="unit-input" id="to-value" placeholder="0">
+                    <select class="unit-select" id="to-unit"></select>
+                  </div>
+                </div>
+                
+                <!-- Additional conversions display -->
+                <div class="additional-conversions" id="additional-conversions">
+                  <div class="conversion-title">About equal to</div>
+                  <div class="conversion-list" id="conversion-list"></div>
+                </div>
               </div>
               
-              <div class="conversion-arrow">⇄</div>
-              
-              <div class="conversion-unit">
-                <input type="number" class="unit-input" id="to-value" placeholder="0">
-                <select class="unit-select" id="to-unit"></select>
+              <!-- Calculator Keypad for Converters -->
+              <div class="converter-keypad">
+                <div class="keypad-row">
+                  <button class="keypad-btn clear" onclick="clearConverterEntry()">CE</button>
+                  <button class="keypad-btn clear" onclick="deleteConverterLast()">⌫</button>
+                </div>
+                <div class="keypad-row">
+                  <button class="keypad-btn" onclick="appendToConverter('7')">7</button>
+                  <button class="keypad-btn" onclick="appendToConverter('8')">8</button>
+                  <button class="keypad-btn" onclick="appendToConverter('9')">9</button>
+                </div>
+                <div class="keypad-row">
+                  <button class="keypad-btn" onclick="appendToConverter('4')">4</button>
+                  <button class="keypad-btn" onclick="appendToConverter('5')">5</button>
+                  <button class="keypad-btn" onclick="appendToConverter('6')">6</button>
+                </div>
+                <div class="keypad-row">
+                  <button class="keypad-btn" onclick="appendToConverter('1')">1</button>
+                  <button class="keypad-btn" onclick="appendToConverter('2')">2</button>
+                  <button class="keypad-btn" onclick="appendToConverter('3')">3</button>
+                </div>
+                <div class="keypad-row">
+                  <button class="keypad-btn zero" onclick="appendToConverter('0')">0</button>
+                  <button class="keypad-btn" onclick="appendToConverter('.')">.</button>
+                </div>
               </div>
             </div>
           </div>
@@ -1573,6 +1751,9 @@
           document.getElementById('to-value').addEventListener('input', () => this.convertToFrom(mode));
           fromUnit.addEventListener('change', () => this.convertFromTo(mode));
           toUnit.addEventListener('change', () => this.convertFromTo(mode));
+          
+          // Initialize additional conversions display
+          this.updateAdditionalConversions(mode);
         }
 
         getConverterUnits(mode) {
@@ -1698,6 +1879,7 @@
           if (fromUnit && toUnit) {
             const result = this.performConversion(fromValue, fromUnit, toUnit, mode);
             document.getElementById('to-value').value = this.formatResult(result);
+            this.updateAdditionalConversions(mode, fromValue, fromUnit);
           }
         }
 
@@ -1709,7 +1891,131 @@
           if (fromUnit && toUnit) {
             const result = this.performConversion(toValue, toUnit, fromUnit, mode);
             document.getElementById('from-value').value = this.formatResult(result);
+            this.updateAdditionalConversions(mode, result, fromUnit);
           }
+        }
+
+        // Converter Keypad Functions
+        appendToConverter(value) {
+          const activeInput = document.activeElement;
+          if (activeInput && (activeInput.id === 'from-value' || activeInput.id === 'to-value')) {
+            const currentValue = activeInput.value || '0';
+            
+            if (value === '.' && currentValue.includes('.')) {
+              return;
+            }
+            
+            if (currentValue === '0' && value !== '.') {
+              activeInput.value = value;
+            } else {
+              activeInput.value = currentValue + value;
+            }
+            
+            // Trigger conversion
+            const mode = this.currentMode;
+            if (activeInput.id === 'from-value') {
+              this.convertFromTo(mode);
+            } else {
+              this.convertToFrom(mode);
+            }
+          } else {
+            // Default to from-value if no input is focused
+            const fromInput = document.getElementById('from-value');
+            const currentValue = fromInput.value || '0';
+            
+            if (value === '.' && currentValue.includes('.')) {
+              return;
+            }
+            
+            if (currentValue === '0' && value !== '.') {
+              fromInput.value = value;
+            } else {
+              fromInput.value = currentValue + value;
+            }
+            
+            this.convertFromTo(this.currentMode);
+          }
+        }
+
+        clearConverterEntry() {
+          const activeInput = document.activeElement;
+          if (activeInput && (activeInput.id === 'from-value' || activeInput.id === 'to-value')) {
+            activeInput.value = '0';
+            const mode = this.currentMode;
+            if (activeInput.id === 'from-value') {
+              this.convertFromTo(mode);
+            } else {
+              this.convertToFrom(mode);
+            }
+          } else {
+            document.getElementById('from-value').value = '0';
+            this.convertFromTo(this.currentMode);
+          }
+        }
+
+        deleteConverterLast() {
+          const activeInput = document.activeElement;
+          if (activeInput && (activeInput.id === 'from-value' || activeInput.id === 'to-value')) {
+            const currentValue = activeInput.value;
+            if (currentValue.length > 1) {
+              activeInput.value = currentValue.slice(0, -1);
+            } else {
+              activeInput.value = '0';
+            }
+            
+            const mode = this.currentMode;
+            if (activeInput.id === 'from-value') {
+              this.convertFromTo(mode);
+            } else {
+              this.convertToFrom(mode);
+            }
+          } else {
+            const fromInput = document.getElementById('from-value');
+            const currentValue = fromInput.value;
+            if (currentValue.length > 1) {
+              fromInput.value = currentValue.slice(0, -1);
+            } else {
+              fromInput.value = '0';
+            }
+            this.convertFromTo(this.currentMode);
+          }
+        }
+
+        // Additional Conversions Display
+        updateAdditionalConversions(mode, value = 0, baseUnit = null) {
+          const conversionList = document.getElementById('conversion-list');
+          if (!conversionList) return;
+          
+          if (value === 0 || !baseUnit) {
+            conversionList.innerHTML = '<div class="conversion-item">Enter a value to see additional conversions</div>';
+            return;
+          }
+          
+          const units = this.getConverterUnits(mode);
+          const conversions = [];
+          
+          // Show conversions to other units
+          units.forEach(unit => {
+            if (unit.value !== baseUnit) {
+              const convertedValue = this.performConversion(value, baseUnit, unit.value, mode);
+              conversions.push({
+                value: this.formatResult(convertedValue),
+                unit: unit.label.split(' (')[0], // Remove unit abbreviation
+                abbreviation: unit.value
+              });
+            }
+          });
+          
+          // Sort by converted value (ascending)
+          conversions.sort((a, b) => parseFloat(a.value) - parseFloat(b.value));
+          
+          // Display conversions
+          conversionList.innerHTML = conversions.map(conv => `
+            <div class="conversion-item">
+              <div class="conversion-value">${conv.value}</div>
+              <div class="conversion-unit-label">${conv.unit}</div>
+            </div>
+          `).join('');
         }
 
         performConversion(value, fromUnit, toUnit, mode) {
@@ -2012,6 +2318,11 @@
       function memoryClear() { calculator.memoryClear(); }
       function clearHistory() { calculator.clearHistory(); }
       function clearMemory() { calculator.clearMemory(); }
+      
+      // Converter Keypad Functions
+      function appendToConverter(value) { calculator.appendToConverter(value); }
+      function clearConverterEntry() { calculator.clearConverterEntry(); }
+      function deleteConverterLast() { calculator.deleteConverterLast(); }
 
       // Panel Management
       function showPanel(panelName) {
