@@ -52,6 +52,11 @@
         font-size: 18px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         transition: all 0.3s ease;
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       
       .hamburger-menu:hover {
@@ -168,11 +173,13 @@
       }
       
       .content-header {
-        padding: 20px 30px;
+        padding: 20px 30px 20px 80px;
         border-bottom: 1px solid #e1e1e1;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        background: white;
+        margin-top: 0;
       }
       
       .mode-title {
@@ -879,6 +886,18 @@
         .sidebar {
           width: 100%;
         }
+        
+        .content-header {
+          padding: 20px 30px 20px 70px;
+        }
+        
+        .hamburger-menu {
+          top: 15px;
+          left: 15px;
+          width: 44px;
+          height: 44px;
+          font-size: 16px;
+        }
       }
       
       /* Programmer Calculator Styles */
@@ -1319,8 +1338,8 @@
             
             <button class="scientific-btn" onclick="appendToDisplay('(')">(</button>
             <button class="scientific-btn" onclick="appendToDisplay(')')">)</button>
-            <button class="scientific-btn" onclick="appendToDisplay('π')">π</button>
-            <button class="scientific-btn" onclick="appendToDisplay('e')">e</button>
+            <button class="scientific-btn" onclick="scientificFunction('pi')">π</button>
+            <button class="scientific-btn" onclick="scientificFunction('euler')">e</button>
             <button class="scientific-btn" onclick="clearAll()">C</button>
             
             <button class="scientific-btn" onclick="appendToDisplay('7')">7</button>
@@ -1999,6 +2018,12 @@
             case 'factorial':
               result = this.factorial(Math.floor(value));
               break;
+            case 'pi':
+              this.appendToDisplay('3.14159');
+              return;
+            case 'euler':
+              this.appendToDisplay('2.71828');
+              return;
           }
 
           if (result !== undefined) {
